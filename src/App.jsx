@@ -124,6 +124,15 @@ export default function App() {
   // ------UI--------
   // ----------------
 
+  // create a helper function that we can call to make our below due date formatting cleaner
+  function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
   return (
     <div className="app-container">
       <h1>Smart To-Do</h1>
@@ -171,8 +180,12 @@ export default function App() {
                   {t.title}
                 </span>
 
+                {/* this displays the date, but we are gonna format it to display nicely */}
+                {/* NOTICE that we are using the helper function to make this cleaner */}
                 {t.dueDate && (
-                  <div className="taskDueDate">Due: {t.dueDate}</div>
+                  <div className="taskDueDate">
+                    Due: {formatDate(t.dueDate)}
+                  </div>
                 )}
               </label>
 
