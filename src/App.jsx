@@ -14,6 +14,9 @@ export default function App() {
   // Stores current input value
   const [title, setTitle] = useState("");
 
+  // Stores duedate input but set it to receive a string because date format will be a string (even though it is numbers).
+  const [dueDate, setDueDate] = useState("");
+
   // Loading indicator state
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +34,7 @@ export default function App() {
       // make GET request to the backend
       const res = await fetch(API_URL);
 
-      if (!res.ok) throw new error("Failed to fetch tasks");
+      if (!res.ok) throw new Error("Failed to fetch tasks");
 
       const data = await res.json();
 
@@ -58,12 +61,13 @@ export default function App() {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, dueDate: dueDate || null }),
       });
 
       if (!res.ok) throw new Error("Failed to add task");
 
       setTitle(""); //clears input field
+      setDueDate(""); //clear input field for dueDate
       await fetchTasks(); //Refreshes task list
     } catch (err) {
       setError(err.message || "Something went wrong");
@@ -132,6 +136,14 @@ export default function App() {
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Add a task..."
         />
+        {/* make space for due date input before add button */}
+        <label htmlFor="dueDate">Due Date</label>
+        <input
+          id="dueDate"
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
         <button className="btn">Add</button>
       </form>
 
@@ -158,6 +170,10 @@ export default function App() {
                 <span className={t.completed ? "completed" : ""}>
                   {t.title}
                 </span>
+
+                {t.dueDate && (
+                  <div className="taskDueDate">Due: {t.dueDate}</div>
+                )}
               </label>
 
               <button className="btn" onClick={() => deleteTask(t.id)}>

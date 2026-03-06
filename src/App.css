@@ -48,3 +48,13 @@
 .completed {
   text-decoration: line-through;
 }
+
+.task-text {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.taskDueDate {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
