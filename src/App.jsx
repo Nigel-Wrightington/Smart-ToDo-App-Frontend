@@ -124,9 +124,16 @@ export default function App() {
   // ------UI--------
   // ----------------
 
+  // creating a helper function to parse dates correctly so we can make tasks on the same day
+  // remember that January = 0, February = 1, etc etc etc. So that is why month - 1 is necessary.
+  function parseLocalDate(dateString) {
+    const [year, month, day] = dateString.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+
   // create a helper function that we can call to make our below due date formatting cleaner
   function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return parseLocalDate(dateString).toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
       year: "numeric",
@@ -143,7 +150,7 @@ export default function App() {
     // this grabs todays date.
     const today = new Date();
     // this turns our current date into a real Date object.
-    const due = new Date(dueDate);
+    const due = parseLocalDate(dueDate);
 
     // we set both dates to midnight so we can compare only the date, not the time.
     // Without this, JavaScript will compare the full date and time.
