@@ -133,6 +133,26 @@ export default function App() {
     });
   }
 
+  // create a helper function that checks if a task is overdue
+  function isOverdue(dueDate, completed) {
+    // the logic says:
+    // if there is no due date, it cannot be overdue.
+    // if the task is completed, do not mark it overdue.
+    if (!dueDate || completed) return false;
+
+    // this grabs todays date.
+    const today = new Date();
+    // this turns our current date into a real Date object.
+    const due = new Date(dueDate);
+
+    // we set both dates to midnight so we can compare only the date, not the time.
+    // Without this, JavaScript will compare the full date and time.
+    today.setHours(0, 0, 0, 0);
+    due.setHours(0, 0, 0, 0);
+
+    return due < today;
+  }
+
   return (
     <div className="app-container">
       <h1>Smart To-Do</h1>
@@ -176,17 +196,26 @@ export default function App() {
                 />
 
                 {/* Apply completed class conditionally */}
-                <span className={t.completed ? "completed" : ""}>
-                  {t.title}
-                </span>
+                <div className="task-Text">
+                  <span
+                    className={`${t.completed ? "completed" : ""} ${isOverdue(t.dueDate, t.completed) ? "overdueTask" : ""}`}
+                  >
+                    {t.title}
+                  </span>
 
-                {/* this displays the date, but we are gonna format it to display nicely */}
-                {/* NOTICE that we are using the helper function to make this cleaner */}
-                {t.dueDate && (
-                  <div className="taskDueDate">
-                    Due: {formatDate(t.dueDate)}
-                  </div>
-                )}
+                  {/* this displays the date, but we are gonna format it to display nicely */}
+                  {/* NOTICE that we are using the helper function to make this cleaner */}
+                  {t.dueDate && (
+                    <div className="taskDueDate">
+                      Due: {formatDate(t.dueDate)}
+                    </div>
+                  )}
+
+                  {/* adding in our isOverdue helper function to display if parameters are met */}
+                  {isOverdue(t.dueDate, t.completed) && (
+                    <div className="overdueWarning">Overdue!</div>
+                  )}
+                </div>
               </label>
 
               <button className="btn" onClick={() => deleteTask(t.id)}>
